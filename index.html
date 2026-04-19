@@ -320,6 +320,13 @@
   html.hero-split .hero__grid { grid-template-columns: 1.3fr 1fr; align-items: start; }
   html.hero-split .hero__art { grid-column: 1 / -1; }
 
+  /* Mobile: stack photo on top, cards side-by-side underneath */
+  @media (max-width: 800px) {
+    .hero__art { grid-template-columns: 1fr; }
+    .hero__sidecards { grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; }
+    .side-card { padding: 22px; min-height: 180px; }
+  }
+
   /* Imagery off */
   html.no-imagery .hero__art { display: none; }
   html.no-imagery .placeholder { background: transparent !important; border: 1px dashed var(--line-soft); }
