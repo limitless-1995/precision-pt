@@ -1,0 +1,1836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Precision PT — Steve Arakelyan, DPT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link id="font-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --bg: #f6f5f1;
+    --bg-2: #efede6;
+    --ink: #1a1a1a;
+    --ink-2: #3a3a38;
+    --muted: #77756e;
+    --line: #1a1a1a;
+    --line-soft: rgba(26,26,26,0.14);
+    --forest: #2b3a2e;
+    --accent: #c8553d;
+    --accent-ink: #f6f5f1;
+
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    --pad: clamp(20px, 4vw, 56px);
+    --gap: clamp(24px, 3vw, 40px);
+    --section: clamp(96px, 12vw, 160px);
+  }
+
+  html.dark {
+    --bg: #0f0f0e;
+    --bg-2: #1a1a18;
+    --ink: #f2f0e9;
+    --ink-2: #d4d2cb;
+    --muted: #8a8880;
+    --line: #f2f0e9;
+    --line-soft: rgba(242,240,233,0.16);
+    --forest: #8aa58d;
+    --accent-ink: #0f0f0e;
+  }
+
+  html.compact {
+    --pad: clamp(16px, 3vw, 36px);
+    --gap: clamp(16px, 2vw, 28px);
+    --section: clamp(64px, 8vw, 112px);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-feature-settings: "ss01","cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  html.pair-space { --font-display: 'Space Grotesque', system-ui, sans-serif; }
+  html.pair-fraunces { --font-display: 'Bricolage Grotesque', system-ui, sans-serif; --font-serif: 'Fraunces', Georgia, serif; }
+  html.pair-mono-led { --font-display: 'JetBrains Mono', ui-monospace, monospace; }
+
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  img, svg { display: block; max-width: 100%; }
+
+  /* ------------ Reusable ------------ */
+  .mono { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  .serif-italic { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+  .rule { height: 1px; background: var(--line); opacity: 0.9; }
+  .rule-soft { height: 1px; background: var(--line-soft); }
+
+  .container {
+    padding-left: var(--pad);
+    padding-right: var(--pad);
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--ink);
+    color: var(--bg);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    transition: transform .2s ease, background .2s ease, color .2s ease;
+    cursor: pointer;
+  }
+  .btn:hover { transform: translateY(-1px); background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn--ghost { background: transparent; color: var(--ink); }
+  .btn--ghost:hover { background: var(--ink); color: var(--bg); }
+  .btn--accent { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn--accent:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn .arrow { display: inline-flex; width: 18px; height: 18px; }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ------------ Nav ------------ */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in oklab, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease, background .3s ease;
+  }
+  .nav.scrolled { border-color: var(--line-soft); }
+  .nav__row {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 72px;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-weight: 700; letter-spacing: -0.02em; font-size: 20px;
+  }
+  .brand__mark {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .brand__mark::after {
+    content: ""; position: absolute; inset: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateX(8px);
+  }
+  .brand small { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 6px; font-weight: 400; }
+
+  .nav__links { display: flex; gap: 4px; }
+  .nav__link {
+    font-size: 15px; font-weight: 500;
+    padding: 10px 14px; border-radius: 999px;
+    color: var(--ink-2);
+    transition: color .2s ease, background .2s ease;
+    position: relative;
+  }
+  .nav__link:hover { color: var(--ink); }
+  .nav__link.active {
+    color: var(--ink);
+    background: color-mix(in oklab, var(--ink) 8%, transparent);
+  }
+  .nav__cta { display: flex; gap: 10px; align-items: center; }
+  .nav__phone { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+  .nav__phone:hover { color: var(--ink); }
+
+  .nav__burger { display: none; width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--line-soft); align-items: center; justify-content: center; }
+  .nav__burger span { width: 16px; height: 1.5px; background: var(--ink); display: block; position: relative; }
+  .nav__burger span::before, .nav__burger span::after {
+    content: ""; position: absolute; left: 0; width: 16px; height: 1.5px; background: var(--ink);
+  }
+  .nav__burger span::before { top: -5px; }
+  .nav__burger span::after { top: 5px; }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 100;
+    background: var(--bg);
+    transform: translateY(-100%);
+    transition: transform .5s cubic-bezier(.7,0,.2,1);
+    display: flex; flex-direction: column;
+  }
+  .mobile-menu.open { transform: translateY(0); }
+  .mobile-menu__top { display: flex; justify-content: space-between; align-items: center; height: 72px; }
+  .mobile-menu__close { width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .mobile-menu__list { list-style: none; padding: 40px 0 0; margin: 0; display: flex; flex-direction: column; gap: 0; flex: 1; }
+  .mobile-menu__list li { border-bottom: 1px solid var(--line-soft); }
+  .mobile-menu__list a {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 22px 0;
+    font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em;
+    font-size: clamp(32px, 8vw, 56px);
+  }
+  .mobile-menu__list a .num { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+  .mobile-menu__bottom { padding: 32px 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+
+  @media (max-width: 900px) {
+    .nav__links { display: none; }
+    .nav__phone { display: none; }
+    .nav__burger { display: inline-flex; }
+    .nav__cta .btn--primary { display: none; }
+  }
+
+  /* ------------ Hero ------------ */
+  .hero {
+    position: relative;
+    padding-top: clamp(48px, 6vw, 88px);
+    padding-bottom: clamp(48px, 6vw, 88px);
+    overflow: hidden;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap);
+    align-items: end;
+  }
+  .hero__title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(64px, 12vw, 200px);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    margin: 0;
+  }
+  .hero__title .serif-italic { font-weight: 400; font-size: 0.92em; letter-spacing: -0.02em; }
+  .hero__title .ink-accent { color: var(--accent); }
+  .hero__word {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+  }
+  .hero__word > span {
+    display: inline-block;
+    transform: translateY(110%);
+    animation: word-rise 1.1s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  @keyframes word-rise { to { transform: translateY(0); } }
+
+  .hero__meta {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: var(--gap);
+    margin-top: clamp(32px, 4vw, 56px);
+    padding-top: 20px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .hero__meta > div { display: flex; flex-direction: column; gap: 6px; }
+  .hero__meta .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .hero__meta .value { font-family: var(--font-display); font-weight: 500; font-size: 17px; letter-spacing: -0.01em; }
+  .hero__meta .value b { font-weight: 500; }
+  .hero__meta .value em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+
+  .hero__ticker {
+    margin-top: clamp(32px, 4vw, 56px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    padding: 14px 0;
+    white-space: nowrap;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(18px, 2vw, 24px);
+    letter-spacing: -0.01em;
+  }
+  .hero__ticker-track { display: inline-flex; gap: 48px; padding-left: 48px; animation: marquee 40s linear infinite; }
+  .hero__ticker-track span { display: inline-flex; align-items: center; gap: 48px; }
+  .hero__ticker-track .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .hero__art {
+    margin-top: clamp(40px, 5vw, 72px);
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--gap);
+  }
+  .hero__photo {
+    position: relative;
+    aspect-ratio: 5/4;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+  .hero__photo img, .about__portrait img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    z-index: 1;
+  }
+  .about__portrait img { object-position: center 15%; }
+  html.no-imagery .hero__photo img, html.no-imagery .about__portrait img { display: none; }
+  .hero__sidecards {
+    display: grid; grid-template-rows: 1fr 1fr; gap: var(--gap);
+  }
+  .side-card {
+    background: var(--ink); color: var(--bg);
+    padding: 28px;
+    border-radius: 6px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 200px;
+  }
+  .side-card--accent { background: var(--accent); color: var(--accent-ink); }
+  .side-card--accent .mono { color: var(--accent-ink); opacity: 0.85; }
+  .side-card--accent .trailing { color: var(--accent-ink); opacity: 0.92; }
+  .side-card .trailing { color: var(--bg); opacity: 0.78; }
+  .side-card h4 {
+    margin: 0;
+    font-weight: 500; font-size: clamp(22px, 2vw, 28px); letter-spacing: -0.02em; line-height: 1.08;
+  }
+  .side-card .metric {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(52px, 5vw, 72px); letter-spacing: -0.04em; line-height: 1;
+  }
+
+  /* Alternate hero layout: wide */
+  html.hero-wide .hero__art { grid-template-columns: 1fr 1fr 1fr; }
+  html.hero-wide .hero__sidecards { grid-template-rows: 1fr; grid-template-columns: 1fr; }
+  html.hero-wide .hero__photo { grid-column: span 2; }
+
+  html.hero-split .hero__grid { grid-template-columns: 1.3fr 1fr; align-items: start; }
+  html.hero-split .hero__art { grid-column: 1 / -1; }
+
+  /* Imagery off */
+  html.no-imagery .hero__art { display: none; }
+  html.no-imagery .placeholder { background: transparent !important; border: 1px dashed var(--line-soft); }
+  html.no-imagery .placeholder::before, html.no-imagery .placeholder::after { display: none; }
+
+  /* ------------ Placeholders ------------ */
+  .placeholder {
+    position: relative;
+    background: var(--bg-2);
+    color: var(--muted);
+    overflow: hidden;
+    border-radius: 6px;
+  }
+  .placeholder::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      135deg,
+      transparent 0 14px,
+      color-mix(in oklab, var(--ink) 6%, transparent) 14px 15px
+    );
+  }
+  .placeholder__label {
+    position: absolute; left: 14px; bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    background: var(--bg);
+    padding: 6px 10px;
+    border-radius: 2px;
+    border: 1px solid var(--line-soft);
+    z-index: 2;
+  }
+  .placeholder__crop {
+    position: absolute; top: 12px; right: 12px;
+    width: 22px; height: 22px; border: 1px solid var(--ink-2);
+    border-radius: 2px;
+    z-index: 2;
+  }
+  .placeholder__crop::before, .placeholder__crop::after {
+    content: ""; position: absolute;
+    background: var(--ink-2);
+  }
+  .placeholder__crop::before { top: -4px; left: -4px; width: 10px; height: 1px; box-shadow: 0 0 0 0, 0 8px 0 var(--ink-2) inset; }
+
+  /* Motion portrait — subtle ken-burns on hero photo */
+  .hero__photo .placeholder::before {
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    from { transform: translate(-2%, -2%) scale(1.05); }
+    to   { transform: translate(2%, 2%) scale(1.08); }
+  }
+
+  /* ------------ Sections ------------ */
+  section { padding-top: var(--section); padding-bottom: 0; }
+  section:last-of-type { padding-bottom: var(--section); }
+  .section-head {
+    display: grid; grid-template-columns: 1fr 2fr; gap: var(--gap);
+    align-items: end;
+    margin-bottom: clamp(40px, 5vw, 72px);
+  }
+  .section-head h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(40px, 6vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+  .section-head h2 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .section-head .section-num { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .section-head p.lead {
+    margin: 0;
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: 56ch;
+  }
+
+  @media (max-width: 800px) {
+    .section-head { grid-template-columns: 1fr; }
+    .hero__meta { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ------------ About ------------ */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap);
+    align-items: start;
+  }
+  .about__portrait {
+    position: relative;
+    aspect-ratio: 4/5;
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+  .about__body {
+    padding-top: 20px;
+    display: flex; flex-direction: column; gap: 28px;
+  }
+  .about__body h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(28px, 2.6vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .about__body h3 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .about__body p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.62;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+  .credentials {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .credentials > div { display: flex; flex-direction: column; gap: 4px; }
+  .credentials .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .credentials .value { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; }
+  .credentials .value em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+
+  @media (max-width: 800px) { .about { grid-template-columns: 1fr; } }
+
+  /* ------------ Services Accordion ------------ */
+  .services { display: flex; flex-direction: column; }
+  .service {
+    border-top: 1px solid var(--line);
+    padding: 28px 0;
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: var(--gap);
+    align-items: start;
+    cursor: pointer;
+    transition: padding .3s ease;
+  }
+  .service:last-of-type { border-bottom: 1px solid var(--line); }
+  .service__num { font-family: var(--font-mono); font-size: 12px; color: var(--muted); padding-top: 8px; letter-spacing: 0.08em; }
+  .service__title {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(28px, 3.6vw, 52px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    transition: color .25s ease;
+  }
+  .service__title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .service__toggle {
+    width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; color: var(--ink);
+    transition: background .25s ease, color .25s ease, transform .3s ease;
+  }
+  .service__body {
+    grid-column: 2 / 3;
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--gap);
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height .5s cubic-bezier(.7,0,.2,1), opacity .5s ease, margin-top .5s ease;
+  }
+  .service__body p {
+    margin: 0 0 16px; color: var(--ink-2); font-size: 16px; line-height: 1.6; text-wrap: pretty;
+  }
+  .service__body ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .service__body ul li {
+    display: flex; gap: 12px; align-items: center;
+    font-size: 14px;
+    padding: 10px 14px;
+    border: 1px solid var(--line-soft);
+    border-radius: 999px;
+    color: var(--ink-2);
+  }
+  .service__body ul li::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0;
+  }
+  .service.open { padding-bottom: 40px; }
+  .service.open .service__title { color: var(--accent); }
+  .service.open .service__body { max-height: 600px; opacity: 1; margin-top: 28px; }
+  .service.open .service__toggle { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); transform: rotate(45deg); }
+
+  @media (max-width: 700px) {
+    .service { grid-template-columns: 32px 1fr auto; }
+    .service__body { grid-template-columns: 1fr; grid-column: 1 / -1; }
+  }
+
+  /* ------------ Conditions (bento grid) ------------ */
+  .conditions {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 2px;
+    background: var(--line-soft);
+    border: 1px solid var(--line-soft);
+  }
+  .condition {
+    background: var(--bg);
+    padding: 28px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 200px;
+    transition: background .3s ease, color .3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .condition:hover { background: var(--ink); color: var(--bg); }
+  .condition:hover .condition__num, .condition:hover .condition__desc { color: var(--bg); opacity: 0.7; }
+  .condition__title {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(22px, 2vw, 32px);
+    letter-spacing: -0.02em; line-height: 1.05;
+    margin: 0;
+  }
+  .condition__title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .condition__num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); }
+  .condition__desc { font-size: 14px; color: var(--muted); line-height: 1.5; margin-top: 12px; }
+  .condition--xl { grid-column: span 6; min-height: 340px; }
+  .condition--lg { grid-column: span 4; min-height: 260px; }
+  .condition--md { grid-column: span 4; min-height: 220px; }
+  .condition--sm { grid-column: span 3; }
+  .condition--accent { background: var(--accent); color: var(--accent-ink); }
+  .condition--accent .condition__num, .condition--accent .condition__desc { color: var(--accent-ink); opacity: 0.75; }
+  .condition--accent:hover { background: var(--ink); }
+
+  /* Decorative shape for featured condition */
+  .condition__shape {
+    position: absolute; right: -40px; bottom: -40px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.12;
+    transition: transform .6s ease;
+  }
+  .condition:hover .condition__shape { transform: scale(1.3) rotate(20deg); }
+
+  @media (max-width: 900px) {
+    .conditions { grid-template-columns: repeat(6, 1fr); }
+    .condition--xl, .condition--lg, .condition--md { grid-column: span 6; }
+    .condition--sm { grid-column: span 3; }
+  }
+
+  /* ------------ Process ------------ */
+  .process {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line-soft);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .process__step {
+    background: var(--bg);
+    padding: 32px 28px 40px;
+    display: flex; flex-direction: column;
+    min-height: 340px;
+  }
+  .process__num {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 80px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--accent);
+  }
+  .process__num em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--ink); }
+  .process__time { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--muted); margin-top: 16px; text-transform: uppercase; }
+  .process__title {
+    margin-top: 12px;
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 22px; letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .process__desc {
+    margin-top: auto;
+    padding-top: 24px;
+    font-size: 14px; line-height: 1.6; color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 900px) {
+    .process { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) {
+    .process { grid-template-columns: 1fr; }
+  }
+
+  /* ------------ Pricing ------------ */
+  .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
+  .price {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 32px;
+    display: flex; flex-direction: column;
+    background: var(--bg);
+    transition: transform .3s ease, background .3s ease, color .3s ease;
+  }
+  .price:hover { transform: translateY(-4px); }
+  .price--feat { background: var(--ink); color: var(--bg); border-color: var(--ink); position: relative; }
+  .price--feat .price__amount em { color: var(--accent); }
+  .price__tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .price--feat .price__tag { color: var(--accent); }
+  .price__name {
+    margin-top: 8px;
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 28px; letter-spacing: -0.02em;
+  }
+  .price__amount {
+    margin-top: 20px;
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 72px; letter-spacing: -0.04em; line-height: 1;
+  }
+  .price__amount small { font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: block; margin-top: 8px; }
+  .price--feat .price__amount small { color: color-mix(in oklab, var(--bg) 60%, transparent); }
+  .price__features { list-style: none; padding: 24px 0 0; margin: 24px 0 0; border-top: 1px solid var(--line-soft); display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .price__features li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.4; }
+  .price__features li::before {
+    content: ""; width: 16px; height: 1.5px; background: currentColor; margin-top: 8px; flex-shrink: 0; opacity: 0.6;
+  }
+  .price .btn { margin-top: 24px; justify-content: center; }
+
+  .insurance {
+    margin-top: clamp(40px, 5vw, 64px);
+    padding: 32px;
+    border-radius: 6px;
+    background: var(--bg-2);
+    display: grid; grid-template-columns: 1fr 2fr; gap: var(--gap);
+    align-items: start;
+  }
+  .insurance h4 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 22px; letter-spacing: -0.02em; }
+  .insurance p { margin: 0; color: var(--ink-2); font-size: 15px; line-height: 1.6; }
+  .insurance__logos { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .insurance__logos span {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em;
+    padding: 8px 12px; border: 1px solid var(--line-soft); border-radius: 999px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 900px) {
+    .pricing { grid-template-columns: 1fr; }
+    .insurance { grid-template-columns: 1fr; }
+  }
+
+  /* ------------ FAQ ------------ */
+  .faq {
+    display: grid; grid-template-columns: 1fr 2fr; gap: var(--gap);
+    align-items: start;
+  }
+  .faq__list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+    cursor: pointer;
+  }
+  .faq__q {
+    display: flex; justify-content: space-between; align-items: center; gap: 20px;
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(18px, 1.6vw, 22px); letter-spacing: -0.01em;
+    transition: color .25s ease;
+  }
+  .faq__item.open .faq__q { color: var(--accent); }
+  .faq__plus {
+    width: 28px; height: 28px; flex-shrink: 0;
+    position: relative;
+    transition: transform .3s ease;
+  }
+  .faq__plus::before, .faq__plus::after { content: ""; position: absolute; top: 50%; left: 50%; width: 14px; height: 1.5px; background: currentColor; transform: translate(-50%, -50%); }
+  .faq__plus::after { transform: translate(-50%, -50%) rotate(90deg); transition: transform .3s ease; }
+  .faq__item.open .faq__plus::after { transform: translate(-50%, -50%) rotate(0deg); }
+  .faq__a {
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height .4s ease, opacity .4s ease, margin-top .3s ease;
+    font-size: 15px; line-height: 1.6; color: var(--ink-2); text-wrap: pretty;
+    max-width: 68ch;
+  }
+  .faq__item.open .faq__a { max-height: 300px; opacity: 1; margin-top: 16px; }
+
+  @media (max-width: 800px) { .faq { grid-template-columns: 1fr; } }
+
+  /* ------------ Booking ------------ */
+  .booking-wrap {
+    position: relative;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 6px;
+    padding: clamp(32px, 4vw, 56px);
+    overflow: hidden;
+  }
+  html.dark .booking-wrap { background: var(--bg-2); color: var(--ink); border: 1px solid var(--line-soft); }
+
+  .booking-wrap .section-head h2,
+  .booking-wrap .section-head p.lead,
+  .booking-wrap .eyebrow { color: inherit; }
+  .booking-wrap .section-head p.lead { color: color-mix(in oklab, var(--bg) 70%, transparent); }
+  html.dark .booking-wrap .section-head p.lead { color: var(--ink-2); }
+
+  .booking {
+    display: grid; grid-template-columns: 1fr 1.2fr;
+    gap: clamp(32px, 4vw, 64px);
+    margin-top: clamp(32px, 4vw, 48px);
+  }
+  .booking__sidebar { display: flex; flex-direction: column; gap: 24px; }
+  .booking__steps { display: flex; flex-direction: column; gap: 4px; }
+  .booking__step-indicator {
+    display: flex; gap: 12px; align-items: center;
+    padding: 16px 20px;
+    border-radius: 6px;
+    border: 1px solid color-mix(in oklab, var(--bg) 16%, transparent);
+    transition: background .3s ease, border-color .3s ease;
+  }
+  html.dark .booking__step-indicator { border-color: var(--line-soft); }
+  .booking__step-indicator.active {
+    background: color-mix(in oklab, var(--bg) 8%, transparent);
+    border-color: color-mix(in oklab, var(--bg) 40%, transparent);
+  }
+  html.dark .booking__step-indicator.active { background: color-mix(in oklab, var(--ink) 8%, transparent); border-color: var(--line-soft); }
+  .booking__step-indicator.done { opacity: 0.5; }
+  .booking__step-indicator .num {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 12px;
+    border: 1px solid currentColor;
+  }
+  .booking__step-indicator.active .num { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .booking__step-indicator.done .num { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .booking__step-indicator .name { font-weight: 500; font-size: 15px; letter-spacing: -0.01em; }
+
+  .booking__card {
+    background: color-mix(in oklab, var(--bg) 6%, transparent);
+    border: 1px solid color-mix(in oklab, var(--bg) 20%, transparent);
+    border-radius: 6px;
+    padding: clamp(24px, 3vw, 40px);
+    min-height: 520px;
+    display: flex; flex-direction: column;
+  }
+  html.dark .booking__card { background: var(--bg); border-color: var(--line-soft); }
+
+  .booking__step-title { font-family: var(--font-display); font-weight: 500; font-size: clamp(24px, 2.6vw, 34px); letter-spacing: -0.02em; margin: 0; }
+  .booking__step-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .booking__step-sub { margin: 10px 0 28px; color: color-mix(in oklab, var(--bg) 60%, transparent); font-size: 15px; line-height: 1.5; }
+  html.dark .booking__step-sub { color: var(--ink-2); }
+
+  .services-select { display: grid; gap: 12px; }
+  .service-opt {
+    border: 1px solid color-mix(in oklab, var(--bg) 18%, transparent);
+    border-radius: 6px;
+    padding: 18px 20px;
+    display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease;
+  }
+  html.dark .service-opt { border-color: var(--line-soft); }
+  .service-opt:hover { border-color: var(--accent); }
+  .service-opt.selected { background: color-mix(in oklab, var(--accent) 16%, transparent); border-color: var(--accent); }
+  .service-opt__name { font-weight: 500; font-size: 16px; letter-spacing: -0.01em; }
+  .service-opt__meta { font-family: var(--font-mono); font-size: 11px; color: color-mix(in oklab, var(--bg) 60%, transparent); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+  html.dark .service-opt__meta { color: var(--muted); }
+  .service-opt__price { font-family: var(--font-display); font-weight: 500; font-size: 22px; letter-spacing: -0.02em; }
+
+  .calendar { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+  .cal__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .cal__month { font-family: var(--font-display); font-weight: 500; font-size: 18px; letter-spacing: -0.01em; }
+  .cal__nav { display: flex; gap: 6px; }
+  .cal__nav button {
+    width: 32px; height: 32px; border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--bg) 20%, transparent);
+    color: inherit;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  html.dark .cal__nav button { border-color: var(--line-soft); }
+  .cal__nav button:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .cal__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal__dow { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; color: color-mix(in oklab, var(--bg) 50%, transparent); text-transform: uppercase; text-align: center; padding: 6px 0; }
+  html.dark .cal__dow { color: var(--muted); }
+  .cal__day {
+    aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+    border: 1px solid transparent;
+  }
+  .cal__day.muted { color: color-mix(in oklab, var(--bg) 30%, transparent); cursor: default; }
+  html.dark .cal__day.muted { color: var(--muted); opacity: 0.4; }
+  .cal__day.disabled { color: color-mix(in oklab, var(--bg) 25%, transparent); cursor: not-allowed; text-decoration: line-through; }
+  html.dark .cal__day.disabled { color: var(--muted); opacity: 0.4; }
+  .cal__day.today { border-color: color-mix(in oklab, var(--bg) 30%, transparent); }
+  html.dark .cal__day.today { border-color: var(--ink-2); }
+  .cal__day:not(.muted):not(.disabled):hover { background: color-mix(in oklab, var(--bg) 10%, transparent); }
+  html.dark .cal__day:not(.muted):not(.disabled):hover { background: var(--bg-2); }
+  .cal__day.selected { background: var(--accent); color: var(--accent-ink); }
+
+  .slots { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; padding-right: 4px; }
+  .slots__header { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: color-mix(in oklab, var(--bg) 60%, transparent); text-transform: uppercase; margin-bottom: 4px; }
+  html.dark .slots__header { color: var(--muted); }
+  .slot {
+    padding: 12px 16px;
+    border-radius: 4px;
+    border: 1px solid color-mix(in oklab, var(--bg) 18%, transparent);
+    font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease, color .2s ease;
+    text-align: left;
+  }
+  html.dark .slot { border-color: var(--line-soft); }
+  .slot:hover { border-color: var(--accent); color: var(--accent); }
+  .slot.selected { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field.full { grid-column: 1 / -1; }
+  .field label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in oklab, var(--bg) 60%, transparent); }
+  html.dark .field label { color: var(--muted); }
+  .field input, .field textarea, .field select {
+    background: transparent;
+    border: 0; border-bottom: 1px solid color-mix(in oklab, var(--bg) 24%, transparent);
+    padding: 10px 0;
+    color: inherit;
+    font: inherit;
+    font-size: 16px;
+    outline: none;
+    transition: border-color .2s ease;
+    border-radius: 0;
+  }
+  html.dark .field input, html.dark .field textarea, html.dark .field select { border-bottom-color: var(--line-soft); color: var(--ink); }
+  .field input:focus, .field textarea:focus, .field select:focus { border-bottom-color: var(--accent); }
+  .field input::placeholder, .field textarea::placeholder { color: color-mix(in oklab, var(--bg) 35%, transparent); }
+  html.dark .field input::placeholder, html.dark .field textarea::placeholder { color: var(--muted); }
+  .field textarea { min-height: 72px; resize: vertical; }
+  .field .err { color: var(--accent); font-family: var(--font-mono); font-size: 11px; display: none; }
+  .field.invalid .err { display: block; }
+  .field.invalid input, .field.invalid textarea { border-bottom-color: var(--accent); }
+
+  .booking__footer {
+    margin-top: auto; padding-top: 24px;
+    display: flex; justify-content: space-between; gap: 12px; align-items: center;
+  }
+  .booking__summary { font-family: var(--font-mono); font-size: 12px; color: color-mix(in oklab, var(--bg) 60%, transparent); letter-spacing: 0.04em; }
+  html.dark .booking__summary { color: var(--muted); }
+  .booking__summary b { color: var(--bg); font-weight: 500; }
+  html.dark .booking__summary b { color: var(--ink); }
+
+  .btn--on-dark { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+  .btn--on-dark:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  html.dark .btn--on-dark { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  .btn--ghost-on-dark { background: transparent; color: var(--bg); border-color: color-mix(in oklab, var(--bg) 30%, transparent); }
+  .btn--ghost-on-dark:hover { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+  html.dark .btn--ghost-on-dark { color: var(--ink); border-color: var(--line-soft); }
+  html.dark .btn--ghost-on-dark:hover { background: var(--ink); color: var(--bg); }
+
+  .success {
+    text-align: center;
+    padding: 40px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+  }
+  .success__icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--accent-ink);
+    font-family: var(--font-display); font-weight: 500; font-size: 40px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  .success h3 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(28px, 3vw, 40px); letter-spacing: -0.03em; }
+  .success h3 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .success p { margin: 0; color: color-mix(in oklab, var(--bg) 70%, transparent); max-width: 40ch; line-height: 1.5; }
+  html.dark .success p { color: var(--ink-2); }
+  .success__details {
+    margin-top: 16px;
+    padding: 20px; border-radius: 6px;
+    background: color-mix(in oklab, var(--bg) 8%, transparent);
+    border: 1px solid color-mix(in oklab, var(--bg) 18%, transparent);
+    font-family: var(--font-mono); font-size: 13px;
+    display: flex; flex-direction: column; gap: 6px;
+    min-width: 280px;
+    text-align: left;
+  }
+  html.dark .success__details { background: var(--bg-2); border-color: var(--line-soft); }
+
+  @media (max-width: 900px) {
+    .booking { grid-template-columns: 1fr; }
+    .calendar { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ------------ Footer ------------ */
+  footer { padding: clamp(48px, 6vw, 88px) 0; margin-top: var(--section); border-top: 1px solid var(--line); }
+  .footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: var(--gap); margin-bottom: 80px; }
+  .footer__brand h3 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: clamp(32px, 4vw, 56px); letter-spacing: -0.03em; line-height: 1; max-width: 16ch; }
+  .footer__brand h3 em { font-family: var(--font-serif); font-style: italic; font-weight: 400; }
+  .footer__brand p { margin-top: 20px; color: var(--ink-2); font-size: 15px; line-height: 1.5; max-width: 38ch; }
+  .footer__col h5 { margin: 0 0 16px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+  .footer__col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+  .footer__col a { font-size: 15px; letter-spacing: -0.01em; color: var(--ink-2); transition: color .2s ease; }
+  .footer__col a:hover { color: var(--accent); }
+  .footer__bottom { display: flex; justify-content: space-between; align-items: end; gap: var(--gap); flex-wrap: wrap; padding-top: 40px; border-top: 1px solid var(--line-soft); }
+  .footer__wordmark {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(80px, 14vw, 220px);
+    line-height: 0.85; letter-spacing: -0.05em;
+    margin: 0 0 40px; padding: 0;
+    color: var(--ink);
+  }
+  .footer__wordmark em { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+
+  @media (max-width: 800px) { .footer__grid { grid-template-columns: 1fr 1fr; } .footer__brand { grid-column: 1 / -1; } }
+
+  /* ------------ small screens ------------ */
+  @media (max-width: 600px) {
+    .credentials { grid-template-columns: 1fr; }
+    .hero__title { font-size: clamp(52px, 14vw, 80px); }
+    .service { padding: 20px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="container nav__row">
+    <a href="#top" class="brand" aria-label="Precision PT">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span>Precision<small>PT</small></span>
+    </a>
+    <div class="nav__links" role="menubar">
+      <a href="#about" class="nav__link" data-nav="about">About</a>
+      <a href="#services" class="nav__link" data-nav="services">Services</a>
+      <a href="#conditions" class="nav__link" data-nav="conditions">Conditions</a>
+      <a href="#process" class="nav__link" data-nav="process">Process</a>
+      <a href="#pricing" class="nav__link" data-nav="pricing">Pricing</a>
+      <a href="#faq" class="nav__link" data-nav="faq">FAQ</a>
+    </div>
+    <div class="nav__cta">
+      <a href="tel:+18185550198" class="nav__phone">(818) 555‑0198</a>
+      <a href="#book" class="btn btn--primary">Book a visit
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button class="nav__burger" id="burger" aria-label="Open menu"><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="container mobile-menu__top">
+    <span class="brand"><span class="brand__mark"></span><span>Precision<small>PT</small></span></span>
+    <button class="mobile-menu__close" id="closeMenu" aria-label="Close">×</button>
+  </div>
+  <ul class="container mobile-menu__list">
+    <li><a href="#about">About<span class="num">01</span></a></li>
+    <li><a href="#services">Services<span class="num">02</span></a></li>
+    <li><a href="#conditions">Conditions<span class="num">03</span></a></li>
+    <li><a href="#process">Process<span class="num">04</span></a></li>
+    <li><a href="#pricing">Pricing<span class="num">05</span></a></li>
+    <li><a href="#faq">FAQ<span class="num">06</span></a></li>
+    <li><a href="#book">Book a Visit<span class="num">→</span></a></li>
+  </ul>
+  <div class="container mobile-menu__bottom">
+    <span>(818) 555‑0198</span>
+    <span>Glendale, CA</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero container" id="top">
+  <div class="hero__grid">
+    <div>
+      <div class="eyebrow" style="margin-bottom: 32px;">One patient · one hour · one plan</div>
+      <h1 class="hero__title" id="heroTitle">
+        <span class="hero__word"><span style="animation-delay:.05s">Move</span></span>
+        <span class="hero__word serif-italic"><span style="animation-delay:.15s">with</span></span>
+        <span class="hero__word"><span style="animation-delay:.25s">precision.</span></span><br>
+        <span class="hero__word"><span style="animation-delay:.35s">Recover</span></span>
+        <span class="hero__word"><span style="animation-delay:.45s">like</span></span>
+        <span class="hero__word ink-accent"><span style="animation-delay:.55s">an</span></span>
+        <span class="hero__word ink-accent"><span style="animation-delay:.65s">athlete.</span></span>
+      </h1>
+    </div>
+  </div>
+
+  <div class="hero__meta">
+    <div>
+      <span class="label">Clinician</span>
+      <span class="value">Steve Arakelyan, <em>DPT</em></span>
+    </div>
+    <div>
+      <span class="label">Location</span>
+      <span class="value">Glendale, CA</span>
+    </div>
+    <div>
+      <span class="label">Format</span>
+      <span class="value">1:1, 60‑minute <em>sessions</em></span>
+    </div>
+    <div>
+      <span class="label">Availability</span>
+      <span class="value">Mon – Sat · next slot <em>tomorrow</em></span>
+    </div>
+  </div>
+
+  <div class="hero__ticker" aria-hidden="true">
+    <div class="hero__ticker-track">
+      <span>Manual therapy <span class="dot"></span> Dry needling <span class="dot"></span> Post‑op rehab <span class="dot"></span> Golf performance <span class="dot"></span> Basketball return‑to‑sport <span class="dot"></span> Gait &amp; running <span class="dot"></span> Injury prevention <span class="dot"></span></span>
+      <span>Manual therapy <span class="dot"></span> Dry needling <span class="dot"></span> Post‑op rehab <span class="dot"></span> Golf performance <span class="dot"></span> Basketball return‑to‑sport <span class="dot"></span> Gait &amp; running <span class="dot"></span> Injury prevention <span class="dot"></span></span>
+    </div>
+  </div>
+
+  <div class="hero__art">
+    <div class="hero__photo">
+      <img src="assets/steve-hero.png" alt="Steve Arakelyan, DPT evaluating a basketball player's knee" style="object-position: center center;" />
+    </div>
+    <div class="hero__sidecards">
+      <div class="side-card">
+        <div>
+          <span class="mono" style="color: color-mix(in oklab, var(--bg) 70%, transparent);">Average range restored</span>
+          <div class="metric" id="metric1" data-target="86" data-suffix="%">0%</div>
+        </div>
+        <span class="trailing" style="font-size: 13px; max-width: 26ch;">Across 12 weeks with adherent patients returning to pre‑injury activity.</span>
+      </div>
+      <div class="side-card side-card--accent">
+        <div>
+          <span class="mono">Sessions to first relief</span>
+          <div class="metric" id="metric2" data-target="3" data-suffix="x">0x</div>
+        </div>
+        <span class="trailing" style="font-size: 13px; max-width: 26ch;">Most patients report a meaningful change by week two.</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about" class="container">
+  <div class="section-head">
+    <div>
+      <span class="section-num">01 / About</span>
+      <h2>Coach, clinician, <em>former athlete.</em></h2>
+    </div>
+    <p class="lead">Steve built Precision PT the way he built his own game — one honest rep at a time. No crowded gym floor, no cookie‑cutter worksheets. Just a clinician who's been on the court and under the pressure, now helping you get back there too.</p>
+  </div>
+
+  <div class="about">
+    <div class="about__portrait reveal">
+      <img src="assets/steve-portrait.png" alt="Steve Arakelyan, DPT" />
+    </div>
+    <div class="about__body reveal">
+      <h3>From <em>varsity hardwood</em> to the treatment table.</h3>
+      <p>Steve grew up in the gym — varsity basketball through high school, countless early mornings and longer nights. The game taught him how bodies adapt when you ask the right thing of them, and how quickly a single bad movement pattern can sideline the rest of the season.</p>
+      <p>These days he's just as likely to be chasing a good lie on the back nine. Golf became his proving ground as a clinician — the same small, repeatable details that decide a swing decide whether a knee, hip or shoulder holds up over time. Precision PT is built on that idea: the details you can feel, taught until they're yours.</p>
+      <div class="credentials">
+        <div>
+          <span class="label">Credentials</span>
+          <span class="value">DPT, <em>cert.</em> dry needling</span>
+        </div>
+        <div>
+          <span class="label">Specialties</span>
+          <span class="value">Sports · post‑op · golf &amp; basketball</span>
+        </div>
+        <div>
+          <span class="label">Practicing</span>
+          <span class="value"><em>ten</em> years, solo since 2023</span>
+        </div>
+        <div>
+          <span class="label">Off hours</span>
+          <span class="value">18 holes &amp; a <em>slow</em> coffee</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="container">
+  <div class="section-head">
+    <div>
+      <span class="section-num">02 / Services</span>
+      <h2>Hands‑on, <em>one hour at a time.</em></h2>
+    </div>
+    <p class="lead">Every session is one patient, one clinician, one focused plan. Choose the visit that matches what your body is asking for — and expand each to see exactly what's inside.</p>
+  </div>
+
+  <div class="services" id="servicesList">
+    <!-- Injected by JS -->
+  </div>
+</section>
+
+<!-- CONDITIONS -->
+<section id="conditions" class="container">
+  <div class="section-head">
+    <div>
+      <span class="section-num">03 / Conditions</span>
+      <h2>What we <em>treat.</em></h2>
+    </div>
+    <p class="lead">From weekend warriors to post‑op recoveries to everyday aches that have overstayed their welcome. If it moves, it's probably on this list.</p>
+  </div>
+
+  <div class="conditions">
+    <div class="condition condition--xl condition--accent">
+      <span class="condition__num">01 — Featured</span>
+      <div>
+        <h3 class="condition__title">Knee &amp; hip <em>rehab</em></h3>
+        <p class="condition__desc" style="max-width: 38ch;">Post‑surgical recovery, ACL return‑to‑sport, meniscal and labral care, chronic patellar pain, hip impingement.</p>
+      </div>
+      <div class="condition__shape" aria-hidden="true"></div>
+    </div>
+    <div class="condition condition--lg">
+      <span class="condition__num">02</span>
+      <h3 class="condition__title">Shoulder &amp; rotator cuff</h3>
+      <p class="condition__desc">Impingement, tears, frozen shoulder, throwing &amp; swing mechanics.</p>
+    </div>
+    <div class="condition condition--lg">
+      <span class="condition__num">03</span>
+      <h3 class="condition__title">Low back &amp; sciatica</h3>
+      <p class="condition__desc">Disc, facet, SI joint — plus the desk posture that quietly started it.</p>
+    </div>
+    <div class="condition condition--md">
+      <span class="condition__num">04</span>
+      <h3 class="condition__title">Neck &amp; headache</h3>
+      <p class="condition__desc">Cervicogenic headaches, tension, pinched nerves.</p>
+    </div>
+    <div class="condition condition--md">
+      <span class="condition__num">05</span>
+      <h3 class="condition__title">Running &amp; gait</h3>
+      <p class="condition__desc">Shin splints, plantar fascia, IT band, form assessments.</p>
+    </div>
+    <div class="condition condition--md">
+      <span class="condition__num">06</span>
+      <h3 class="condition__title">Ankle &amp; foot</h3>
+      <p class="condition__desc">Sprains, post‑fracture return, balance &amp; proprioception.</p>
+    </div>
+    <div class="condition condition--sm">
+      <span class="condition__num">07</span>
+      <h3 class="condition__title">Golf body</h3>
+      <p class="condition__desc">Mobility &amp; rotation for a repeatable swing.</p>
+    </div>
+    <div class="condition condition--sm">
+      <span class="condition__num">08</span>
+      <h3 class="condition__title">Tennis &amp; racquet</h3>
+      <p class="condition__desc">Elbow, wrist, shoulder, serve mechanics.</p>
+    </div>
+    <div class="condition condition--sm">
+      <span class="condition__num">09</span>
+      <h3 class="condition__title">Vestibular</h3>
+      <p class="condition__desc">BPPV, dizziness, balance retraining.</p>
+    </div>
+    <div class="condition condition--sm">
+      <span class="condition__num">10</span>
+      <h3 class="condition__title">Older adult</h3>
+      <p class="condition__desc">Strength, falls prevention, post‑hospital.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="container">
+  <div class="section-head">
+    <div>
+      <span class="section-num">04 / Process</span>
+      <h2>What a visit <em>looks like.</em></h2>
+    </div>
+    <p class="lead">A first session at Precision PT isn't a fifteen‑minute triage between two other patients. It's a full hour of undivided attention, a hands‑on assessment, and a plan you walk out of the room actually understanding.</p>
+  </div>
+
+  <div class="process">
+    <div class="process__step">
+      <span class="process__num"><em>01</em></span>
+      <span class="process__time">00 : 00 — 00 : 15</span>
+      <h4 class="process__title">Story first.</h4>
+      <p class="process__desc">Before any test, we talk. What hurts, when it started, what you've already tried, and — the part most clinics skip — what you actually want to get back to.</p>
+    </div>
+    <div class="process__step">
+      <span class="process__num"><em>02</em></span>
+      <span class="process__time">00 : 15 — 00 : 35</span>
+      <h4 class="process__title">Assess the whole chain.</h4>
+      <p class="process__desc">The pain point rarely travels alone. Steve assesses movement, strength, and load from the ground up until the real culprit shows itself.</p>
+    </div>
+    <div class="process__step">
+      <span class="process__num"><em>03</em></span>
+      <span class="process__time">00 : 35 — 00 : 55</span>
+      <h4 class="process__title">Hands‑on &amp; move.</h4>
+      <p class="process__desc">Manual work, dry needling where it earns its place, then coached movement so you feel the change before you leave the room.</p>
+    </div>
+    <div class="process__step">
+      <span class="process__num"><em>04</em></span>
+      <span class="process__time">00 : 55 — 01 : 00</span>
+      <h4 class="process__title">Walk away with a plan.</h4>
+      <p class="process__desc">A short list of the right homework, a realistic timeline, and a cadence for follow‑ups. You'll know what comes next and why.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="container">
+  <div class="section-head">
+    <div>
+      <span class="section-num">05 / Pricing</span>
+      <h2>Straight pricing, <em>no surprises.</em></h2>
+    </div>
+    <p class="lead">Precision PT is an out‑of‑network, fee‑for‑service practice. You pay one transparent rate for the actual hour Steve spends with you — no bundled codes, no "we'll bill you later" letters.</p>
+  </div>
+
+  <div class="pricing">
+    <div class="price">
+      <span class="price__tag">Initial visit</span>
+      <span class="price__name">Evaluation <span class="serif-italic">&amp;</span> Plan</span>
+      <div class="price__amount">$210<small>/ 75 min · first visit only</small></div>
+      <ul class="price__features">
+        <li>Full movement &amp; strength assessment</li>
+        <li>First hands‑on treatment, same visit</li>
+        <li>Written home plan sent same day</li>
+        <li>Insurance‑ready superbill on request</li>
+      </ul>
+      <a href="#book" class="btn btn--ghost">Book evaluation</a>
+    </div>
+    <div class="price price--feat">
+      <span class="price__tag">Most chosen</span>
+      <span class="price__name">Follow‑up <span class="serif-italic">Session</span></span>
+      <div class="price__amount">$<em>175</em><small>/ 60 min · single session</small></div>
+      <ul class="price__features">
+        <li>One clinician, one patient, the full hour</li>
+        <li>Manual therapy + dry needling included</li>
+        <li>Progressions updated every visit</li>
+        <li>Video form‑review between sessions</li>
+      </ul>
+      <a href="#book" class="btn btn--accent">Book a session</a>
+    </div>
+    <div class="price">
+      <span class="price__tag">Best value</span>
+      <span class="price__name">Recovery <span class="serif-italic">Package</span></span>
+      <div class="price__amount">$795<small>/ 5‑session package · $159 per visit</small></div>
+      <ul class="price__features">
+        <li>Five 60‑minute sessions, yours to schedule</li>
+        <li>Saves $80 over single visits</li>
+        <li>Priority scheduling &amp; text support</li>
+        <li>Performance re‑test at session five</li>
+      </ul>
+      <a href="#book" class="btn btn--ghost">Start a package</a>
+    </div>
+  </div>
+
+  <div class="insurance">
+    <h4>A quick note on <span class="serif-italic">insurance.</span></h4>
+    <div>
+      <p>Precision PT does not bill insurance directly. Most PPO plans reimburse 50–80% of out‑of‑network PT — Steve will give you an itemized superbill after each visit with the CPT and ICD codes your insurer needs. Patients with an HSA or FSA can pay directly from those accounts.</p>
+      <div class="insurance__logos">
+        <span>PPO Superbills</span>
+        <span>HSA / FSA</span>
+        <span>Medicare non‑participating</span>
+        <span>Worker's comp on request</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="container">
+  <div class="section-head">
+    <div>
+      <span class="section-num">06 / FAQ</span>
+      <h2>The stuff people <em>actually ask.</em></h2>
+    </div>
+    <p class="lead">If you don't see your question here, text the clinic number — Steve usually gets back the same day.</p>
+  </div>
+
+  <div class="faq">
+    <div class="mono" style="padding-top: 4px;">
+      Six questions<br>about two minutes to read
+    </div>
+    <div class="faq__list" id="faqList">
+      <!-- injected -->
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="book" class="container">
+  <div class="booking-wrap">
+    <div class="section-head" style="margin-bottom: 0;">
+      <div>
+        <span class="section-num" style="color: color-mix(in oklab, var(--bg) 60%, transparent);">07 / Book a visit</span>
+        <h2>Let's get you <em>moving.</em></h2>
+      </div>
+      <p class="lead">Pick a service, pick a time, tell Steve a little about what's going on. You'll get a confirmation by text within the hour.</p>
+    </div>
+
+    <div class="booking" id="booking">
+      <aside class="booking__sidebar">
+        <div class="booking__steps" id="bookingSteps">
+          <div class="booking__step-indicator active" data-step="1"><span class="num">1</span><span class="name">Service</span></div>
+          <div class="booking__step-indicator" data-step="2"><span class="num">2</span><span class="name">Date &amp; time</span></div>
+          <div class="booking__step-indicator" data-step="3"><span class="num">3</span><span class="name">Your info</span></div>
+          <div class="booking__step-indicator" data-step="4"><span class="num">4</span><span class="name">Confirmation</span></div>
+        </div>
+        <div style="padding: 20px 0; border-top: 1px solid color-mix(in oklab, var(--bg) 16%, transparent); font-size: 13px; line-height: 1.5; color: color-mix(in oklab, var(--bg) 65%, transparent);" id="sidebarFooter">
+          <span class="mono" style="color: inherit; display: block; margin-bottom: 10px;">What to expect</span>
+          A short confirmation text, a link to add it to your calendar, and a one‑time intake form. No surprise fees, no call centers.
+        </div>
+      </aside>
+
+      <div class="booking__card" id="bookingCard">
+        <!-- populated by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="container">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <h3>Recover with <em>intent.</em></h3>
+      <p>Precision Physical Therapy is an independent, out‑of‑network clinic in Glendale, California. One clinician, one patient, one hour.</p>
+    </div>
+    <div class="footer__col">
+      <h5>Visit</h5>
+      <ul>
+        <li><a href="#">Mon – Fri · 7 – 6</a></li>
+        <li><a href="#">Saturday · 8 – 1</a></li>
+        <li><a href="#">344 E Colorado St, Ste 12</a></li>
+        <li><a href="#">Glendale, CA 91205</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h5>Reach</h5>
+      <ul>
+        <li><a href="tel:+18185550198">(818) 555‑0198</a></li>
+        <li><a href="mailto:steve@precision-pt.com">steve@precision‑pt.com</a></li>
+        <li><a href="#">Text for quick questions</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h5>Practice</h5>
+      <ul>
+        <li><a href="#pricing">Pricing &amp; superbills</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#">New patient intake</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="footer__wordmark">Precision <em>PT.</em></h2>
+
+  <div class="footer__bottom">
+    <span class="mono">© 2026 Precision Physical Therapy · Steve Arakelyan, DPT</span>
+    <span class="mono">Designed with intent · Glendale, CA</span>
+  </div>
+</footer>
+
+<script>
+/* ===== Apply design tokens (locked from Claude Design handoff) ===== */
+(function applyDesignTokens(){
+  const accent = '#c8553d';
+  const dark = true;
+  document.documentElement.style.setProperty('--accent', accent);
+  document.documentElement.style.setProperty('--accent-ink', dark ? '#0f0f0e' : '#f6f5f1');
+  document.documentElement.classList.toggle('dark', dark);
+  document.documentElement.classList.add('hero-stacked');
+})();
+
+/* ===== Nav scrolled + scroll-spy ===== */
+const nav = document.getElementById('nav');
+const sections = Array.from(document.querySelectorAll('section[id], header[id]'));
+const navLinks = Array.from(document.querySelectorAll('.nav__link'));
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 8);
+  const mid = window.scrollY + window.innerHeight * 0.3;
+  let active = sections[0];
+  sections.forEach(s => { if (s.offsetTop <= mid) active = s; });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('data-nav') === active.id));
+}, { passive: true });
+
+/* ===== Mobile menu ===== */
+const burger = document.getElementById('burger');
+const menu = document.getElementById('mobileMenu');
+const closeMenu = document.getElementById('closeMenu');
+burger.addEventListener('click', () => menu.classList.add('open'));
+closeMenu.addEventListener('click', () => menu.classList.remove('open'));
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
+
+/* ===== Reveal on scroll ===== */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ===== Animate metrics ===== */
+const metricObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    const target = +el.dataset.target;
+    const suffix = el.dataset.suffix || '';
+    const dur = 1400;
+    const start = performance.now();
+    function tick(now){
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    metricObs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-target]').forEach(el => metricObs.observe(el));
+
+/* ===== Services data + accordion ===== */
+const SERVICES = [
+  {
+    n: '01', title: 'Initial Evaluation & Treatment',
+    desc: 'A 75‑minute first visit. Steve takes your history, walks you through a head‑to‑toe movement screen, and begins treatment the same day so you leave with relief, not just a printout.',
+    bullets: ['Movement & strength screen', 'Same‑visit hands‑on work', 'Written home plan (PDF)', 'Insurance‑ready superbill']
+  },
+  {
+    n: '02', title: 'Manual Therapy Session',
+    desc: 'Joint mobilization, soft tissue work, and assisted stretching tailored to what your body revealed on intake. Paired with corrective exercise — hands first, then reps.',
+    bullets: ['Joint mobilization', 'Soft tissue release', 'Corrective movement', '60 minutes, 1:1']
+  },
+  {
+    n: '03', title: 'Dry Needling',
+    desc: 'A targeted tool, not a sales pitch. Dry needling is folded into a session only when it earns the minutes — for trigger points, tight fascia, and stubborn regional pain.',
+    bullets: ['Single‑use sterile needles', 'Add‑on to manual session', 'Common for neck, glute, calf', 'No charge if not indicated']
+  },
+  {
+    n: '04', title: 'Post‑Op Rehab',
+    desc: 'Dedicated programming for ACL, rotator cuff, meniscus, hip labrum, total joint and similar surgeries. Built around your surgeon\u2019s protocol, not on top of it.',
+    bullets: ['Surgeon protocol aligned', 'Phase‑based progressions', 'Return‑to‑sport testing', 'Direct access to Steve by text']
+  },
+  {
+    n: '05', title: 'Golf Performance',
+    desc: 'An hour on your body, not just your swing. Mobility screen, rotational strength, and swing‑specific drills for players who want the body to match the ambition.',
+    bullets: ['TPI‑style mobility screen', 'Rotational power work', 'On‑tee drill library', 'Coach‑friendly reports']
+  },
+  {
+    n: '06', title: 'Return‑to‑Sport Testing',
+    desc: 'Objective criteria before you step back on the court. Force, hop, balance and sport‑specific movement — so you return because the body passed, not just because the calendar says so.',
+    bullets: ['Limb symmetry index', 'Hop & landing battery', 'Sport‑specific drills', 'Written clearance report']
+  }
+];
+
+const svcContainer = document.getElementById('servicesList');
+svcContainer.innerHTML = SERVICES.map(s => `
+  <div class="service" data-svc>
+    <span class="service__num">${s.n}</span>
+    <div>
+      <span class="service__title">${s.title.replace(/\b(Evaluation|Therapy|Needling|Rehab|Performance|Testing)\b/, '<em>$1</em>')}</span>
+      <div class="service__body">
+        <p>${s.desc}</p>
+        <ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <button class="service__toggle" aria-label="Expand">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+`).join('');
+svcContainer.querySelectorAll('[data-svc]').forEach(row => {
+  row.addEventListener('click', () => {
+    const open = row.classList.contains('open');
+    svcContainer.querySelectorAll('[data-svc]').forEach(r => r.classList.remove('open'));
+    if (!open) row.classList.add('open');
+  });
+});
+// open first by default
+svcContainer.querySelector('[data-svc]').classList.add('open');
+
+/* ===== FAQ data + accordion ===== */
+const FAQ = [
+  { q: 'Do I need a referral from my doctor?',
+    a: 'In California, no. Direct access laws allow you to see a physical therapist without a physician referral for the first 45 days or 12 visits, whichever comes first. If we expect to go longer, we\u2019ll loop in your physician.' },
+  { q: 'Do you take my insurance?',
+    a: 'Precision PT is an out‑of‑network practice. You pay at the time of service, and Steve provides a superbill with the right CPT and ICD codes for your insurer. Most PPO plans reimburse 50–80%. HSA and FSA cards are accepted.' },
+  { q: 'How many visits will I need?',
+    a: 'Most patients see meaningful change inside three sessions and finish an episode of care in six to twelve. You\u2019ll get a realistic estimate at the end of your first visit — and we adjust as the body tells us more.' },
+  { q: 'What should I wear?',
+    a: 'Loose, athletic clothing you can move in. If we\u2019re working on a knee or hip, shorts are helpful. Otherwise, whatever you\u2019d wear to the gym works fine.' },
+  { q: 'Can I park on‑site?',
+    a: 'Yes — free patient parking in the lot behind the building off Maryland Ave. Street parking is also open after 10 AM.' },
+  { q: 'What if I need to cancel?',
+    a: 'Life happens. Reschedule any time up to 24 hours before your visit at no charge. Cancellations inside 24 hours are billed at 50% of the session rate.' }
+];
+const faqList = document.getElementById('faqList');
+faqList.innerHTML = FAQ.map(f => `
+  <div class="faq__item">
+    <div class="faq__q">${f.q}<span class="faq__plus" aria-hidden="true"></span></div>
+    <div class="faq__a">${f.a}</div>
+  </div>
+`).join('');
+faqList.querySelectorAll('.faq__item').forEach(it => {
+  it.addEventListener('click', () => it.classList.toggle('open'));
+});
+// open first
+faqList.querySelector('.faq__item').classList.add('open');
+
+/* ===== Booking flow ===== */
+const BOOKING_SERVICES = [
+  { id: 'eval', name: 'Initial Evaluation', dur: '75 min', price: 210 },
+  { id: 'follow', name: 'Follow‑up Session', dur: '60 min', price: 175 },
+  { id: 'golf',   name: 'Golf Performance', dur: '60 min', price: 175 },
+  { id: 'package', name: '5‑Session Package (first visit)', dur: '60 min', price: 159 },
+];
+
+const booking = {
+  step: 1,
+  serviceId: null,
+  date: null,
+  time: null,
+  month: new Date(2026, 3, 1), // April 2026
+  form: { firstName:'', lastName:'', email:'', phone:'', goal:'' , concerns:''}
+};
+
+function fmtDate(d){
+  return d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+}
+function monthLabel(d){
+  return d.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+}
+
+function renderBooking(){
+  // step indicators
+  document.querySelectorAll('#bookingSteps .booking__step-indicator').forEach(el => {
+    const n = +el.dataset.step;
+    el.classList.toggle('active', n === booking.step);
+    el.classList.toggle('done', n < booking.step);
+  });
+
+  const card = document.getElementById('bookingCard');
+  if (booking.step === 1) card.innerHTML = renderStep1();
+  else if (booking.step === 2) card.innerHTML = renderStep2();
+  else if (booking.step === 3) card.innerHTML = renderStep3();
+  else if (booking.step === 4) card.innerHTML = renderStep4();
+  wireCard();
+}
+
+function renderStep1(){
+  return `
+    <h3 class="booking__step-title">Choose a <em>service.</em></h3>
+    <p class="booking__step-sub">First time at Precision PT? Start with an evaluation — Steve will route you from there.</p>
+    <div class="services-select">
+      ${BOOKING_SERVICES.map(s => `
+        <div class="service-opt ${booking.serviceId === s.id ? 'selected' : ''}" data-svc="${s.id}">
+          <div>
+            <div class="service-opt__name">${s.name}</div>
+            <div class="service-opt__meta">${s.dur} · 1:1 with Steve</div>
+          </div>
+          <div class="service-opt__price">$${s.price}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="booking__footer">
+      <span class="booking__summary">${booking.serviceId ? '<b>'+BOOKING_SERVICES.find(x=>x.id===booking.serviceId).name+'</b> · $'+BOOKING_SERVICES.find(x=>x.id===booking.serviceId).price : 'Step 1 of 4'}</span>
+      <button class="btn btn--on-dark" id="step1next" ${booking.serviceId ? '' : 'disabled style="opacity:.4;cursor:not-allowed"'}>
+        Continue
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  `;
+}
+
+function buildCalendar(){
+  const m = booking.month;
+  const first = new Date(m.getFullYear(), m.getMonth(), 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(m.getFullYear(), m.getMonth()+1, 0).getDate();
+  const today = new Date(2026, 3, 19); // simulated "today"
+  const cells = [];
+  for (let i=0;i<startDow;i++) cells.push({ muted: true });
+  for (let d=1; d<=daysInMonth; d++){
+    const dt = new Date(m.getFullYear(), m.getMonth(), d);
+    const dow = dt.getDay();
+    const isPast = dt < today && !(dt.getFullYear()===today.getFullYear() && dt.getMonth()===today.getMonth() && dt.getDate()===today.getDate());
+    const isSunday = dow === 0;
+    cells.push({
+      d,
+      dt,
+      today: dt.toDateString() === today.toDateString(),
+      disabled: isPast || isSunday,
+      selected: booking.date && dt.toDateString() === booking.date.toDateString()
+    });
+  }
+  return cells;
+}
+
+function slotsFor(date){
+  if (!date) return [];
+  const dow = date.getDay();
+  if (dow === 6) return ['8:00 AM','9:30 AM','11:00 AM','12:30 PM']; // Saturday
+  return ['7:00 AM','8:30 AM','10:00 AM','11:30 AM','1:00 PM','2:30 PM','4:00 PM','5:30 PM'];
+}
+
+function renderStep2(){
+  const cells = buildCalendar();
+  const slots = slotsFor(booking.date);
+  const svc = BOOKING_SERVICES.find(s => s.id === booking.serviceId);
+  return `
+    <h3 class="booking__step-title">Pick a <em>date &amp; time.</em></h3>
+    <p class="booking__step-sub">${svc.name} · ${svc.dur}. Closed Sundays. All times Pacific.</p>
+
+    <div class="calendar">
+      <div>
+        <div class="cal__head">
+          <div class="cal__month">${monthLabel(booking.month)}</div>
+          <div class="cal__nav">
+            <button id="prevMonth" aria-label="Previous">‹</button>
+            <button id="nextMonth" aria-label="Next">›</button>
+          </div>
+        </div>
+        <div class="cal__grid">
+          ${['S','M','T','W','T','F','S'].map(d => `<div class="cal__dow">${d}</div>`).join('')}
+          ${cells.map(c => {
+            if (c.muted) return `<div class="cal__day muted"></div>`;
+            let cls = 'cal__day';
+            if (c.disabled) cls += ' disabled';
+            if (c.today) cls += ' today';
+            if (c.selected) cls += ' selected';
+            return `<div class="${cls}" ${c.disabled ? '' : 'data-day="'+c.d+'"'}>${c.d}</div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div>
+        <div class="slots__header">${booking.date ? fmtDate(booking.date) : 'Select a day →'}</div>
+        <div class="slots">
+          ${slots.map(s => `<button class="slot ${booking.time===s ? 'selected' : ''}" data-slot="${s}">${s}</button>`).join('')}
+          ${slots.length === 0 ? '<span class="mono" style="padding: 20px 0;">Pick a date to see open times.</span>' : ''}
+        </div>
+      </div>
+    </div>
+
+    <div class="booking__footer">
+      <span class="booking__summary">${booking.date && booking.time ? '<b>'+fmtDate(booking.date)+' · '+booking.time+'</b>' : 'Step 2 of 4'}</span>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn--ghost-on-dark" id="step2back">← Back</button>
+        <button class="btn btn--on-dark" id="step2next" ${booking.date && booking.time ? '' : 'disabled style="opacity:.4;cursor:not-allowed"'}>
+          Continue
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderStep3(){
+  const svc = BOOKING_SERVICES.find(s => s.id === booking.serviceId);
+  return `
+    <h3 class="booking__step-title">A little <em>about you.</em></h3>
+    <p class="booking__step-sub">Steve will read this before your visit so you're not repeating yourself at the door.</p>
+    <form class="form-grid" id="bookingForm" novalidate>
+      <div class="field" data-key="firstName">
+        <label>First name</label>
+        <input type="text" value="${booking.form.firstName}" placeholder="Alex" required>
+        <span class="err">Required.</span>
+      </div>
+      <div class="field" data-key="lastName">
+        <label>Last name</label>
+        <input type="text" value="${booking.form.lastName}" placeholder="Kim" required>
+        <span class="err">Required.</span>
+      </div>
+      <div class="field" data-key="email">
+        <label>Email</label>
+        <input type="email" value="${booking.form.email}" placeholder="you@email.com" required>
+        <span class="err">Enter a valid email.</span>
+      </div>
+      <div class="field" data-key="phone">
+        <label>Mobile phone</label>
+        <input type="tel" value="${booking.form.phone}" placeholder="(818) 555‑0198" required>
+        <span class="err">10‑digit phone number required.</span>
+      </div>
+      <div class="field full" data-key="goal">
+        <label>What do you want to get back to?</label>
+        <input type="text" value="${booking.form.goal}" placeholder="Run my next half, swing pain‑free, climb stairs without the click…" required>
+        <span class="err">Give Steve a goal to work toward.</span>
+      </div>
+      <div class="field full" data-key="concerns">
+        <label>Anything Steve should know? (optional)</label>
+        <textarea placeholder="Surgery history, meds, what's been tried, flare‑up patterns…">${booking.form.concerns}</textarea>
+      </div>
+    </form>
+
+    <div class="booking__footer">
+      <span class="booking__summary"><b>${svc.name}</b> · ${fmtDate(booking.date)} · ${booking.time}</span>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn--ghost-on-dark" id="step3back">← Back</button>
+        <button class="btn btn--on-dark" id="step3next">
+          Confirm booking
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderStep4(){
+  const svc = BOOKING_SERVICES.find(s => s.id === booking.serviceId);
+  return `
+    <div class="success">
+      <div class="success__icon">✓</div>
+      <h3>You're on the <em>schedule.</em></h3>
+      <p>A confirmation text is heading to ${booking.form.phone || 'your phone'} with a link to add it to your calendar and a one‑time intake form.</p>
+      <div class="success__details">
+        <div><span style="opacity:.6;">Patient</span>  ·  ${booking.form.firstName} ${booking.form.lastName}</div>
+        <div><span style="opacity:.6;">Visit</span>    ·  ${svc.name}</div>
+        <div><span style="opacity:.6;">When</span>     ·  ${fmtDate(booking.date)} · ${booking.time}</div>
+        <div><span style="opacity:.6;">Where</span>    ·  344 E Colorado St, Ste 12</div>
+        <div><span style="opacity:.6;">Goal</span>     ·  ${booking.form.goal}</div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top: 16px;">
+        <button class="btn btn--ghost-on-dark" id="step4reset">Book another</button>
+        <a href="#top" class="btn btn--on-dark">Back to top</a>
+      </div>
+    </div>
+  `;
+}
+
+function wireCard(){
+  // Step 1
+  document.querySelectorAll('.service-opt').forEach(el => {
+    el.addEventListener('click', () => {
+      booking.serviceId = el.dataset.svc;
+      renderBooking();
+    });
+  });
+  const s1 = document.getElementById('step1next');
+  if (s1) s1.addEventListener('click', () => { if (booking.serviceId) { booking.step = 2; renderBooking(); }});
+
+  // Step 2
+  const prev = document.getElementById('prevMonth');
+  const next = document.getElementById('nextMonth');
+  if (prev) prev.addEventListener('click', () => {
+    const m = booking.month; booking.month = new Date(m.getFullYear(), m.getMonth()-1, 1); renderBooking();
+  });
+  if (next) next.addEventListener('click', () => {
+    const m = booking.month; booking.month = new Date(m.getFullYear(), m.getMonth()+1, 1); renderBooking();
+  });
+  document.querySelectorAll('.cal__day[data-day]').forEach(el => {
+    el.addEventListener('click', () => {
+      const d = +el.dataset.day;
+      booking.date = new Date(booking.month.getFullYear(), booking.month.getMonth(), d);
+      booking.time = null;
+      renderBooking();
+    });
+  });
+  document.querySelectorAll('.slot').forEach(el => {
+    el.addEventListener('click', () => {
+      booking.time = el.dataset.slot;
+      renderBooking();
+    });
+  });
+  const s2b = document.getElementById('step2back');
+  if (s2b) s2b.addEventListener('click', () => { booking.step = 1; renderBooking(); });
+  const s2n = document.getElementById('step2next');
+  if (s2n) s2n.addEventListener('click', () => { if (booking.date && booking.time) { booking.step = 3; renderBooking(); }});
+
+  // Step 3
+  const form = document.getElementById('bookingForm');
+  if (form){
+    form.querySelectorAll('[data-key] input, [data-key] textarea').forEach(inp => {
+      inp.addEventListener('input', () => {
+        const key = inp.closest('[data-key]').dataset.key;
+        booking.form[key] = inp.value;
+        inp.closest('[data-key]').classList.remove('invalid');
+      });
+    });
+    document.getElementById('step3back').addEventListener('click', () => { booking.step = 2; renderBooking(); });
+    document.getElementById('step3next').addEventListener('click', () => {
+      let ok = true;
+      const checks = {
+        firstName: v => !!v.trim(),
+        lastName:  v => !!v.trim(),
+        email:     v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+        phone:     v => (v.replace(/\D/g,'').length >= 10),
+        goal:      v => !!v.trim()
+      };
+      Object.entries(checks).forEach(([k, fn]) => {
+        const field = form.querySelector('[data-key="'+k+'"]');
+        if (!fn(booking.form[k] || '')){ field.classList.add('invalid'); ok = false; }
+      });
+      if (ok) { booking.step = 4; renderBooking(); }
+    });
+  }
+
+  // Step 4
+  const r = document.getElementById('step4reset');
+  if (r) r.addEventListener('click', () => {
+    booking.step = 1; booking.serviceId = null; booking.date = null; booking.time = null;
+    booking.form = { firstName:'', lastName:'', email:'', phone:'', goal:'', concerns:''};
+    renderBooking();
+  });
+}
+
+renderBooking();
+
+/* ===== Smooth scroll for in-page links ===== */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) {
+      e.preventDefault();
+      window.scrollTo({ top: el.offsetTop - 60, behavior: 'smooth' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
